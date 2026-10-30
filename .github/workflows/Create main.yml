@@ -1,0 +1,27 @@
+- name: Build Flet app
+  # You may pin to the exact commit or the version.
+  # uses: flet-dev/flet-build-action@96093619265697f7c68cef5cf18981e4be296b11
+  uses: flet-dev/flet-build-action@v1.0.0
+  with:
+    # Target passed to `flet build`. Supported values are `apk`, `aab`, `ipa`, `ios-simulator`, `macos`, `linux`, `windows`, and `web`. Use macOS runners for Apple targets (`ipa`, `ios-simulator` & `macos`), Linux runners for `linux`, and Windows for `windows`; Android and Web can run on all three runners.
+    target: 
+    # Directory containing the Flet project's `pyproject.toml`. Relative paths are resolved from the repository workspace. Defaults to the repository root.
+    working-directory: # optional, default is .
+    # Python interpreter used by uv to resolve the project environment and run the Flet CLI, for example `3.12`. When set, it takes precedence over the project's interpreter selection. When empty, uv resolves Python from the project configuration.
+    runner-python-version: # optional, default is 
+    # Python version bundled into the built application, for example `3.13`. This is passed to `flet build --python-version` and is independent of `runner-python-version`. When empty (the default), Flet resolves it from `project.requires-python` of the `pyproject.toml`, then falls back to its latest supported version.
+    bundled-python-version: # optional, default is 
+    # Internal, incrementing build identifier, commonly `github.run_number`. This is passed to `flet build --build-number`. When empty (the default), falls back to `[tool.flet].build_number` in `pyproject.toml`.
+    build-number: # optional, default is 
+    # User-facing release version in `x.y.z` form, such as `1.4.0`. This is passed to `flet build --build-version` and overrides the version in `pyproject.toml`. When empty, Flet uses project or template configuration.
+    build-version: # optional, default is 
+    # Directory for the raw build output. Relative paths are resolved from `working-directory`. The directory is deleted and recreated by Flet for each build. Defaults to `build/<target>`.
+    output-directory: # optional, default is 
+    # Additional arguments for `flet build`, provided as one shell-like string, for example `--split-per-abi --arch arm64`. Arguments are parsed without shell evaluation. Prefer `pyproject.toml` for persistent configuration. `--output`, `--python-version`, `--build-number`, and `--build-version` must use their dedicated Action inputs. Docs: https://flet.dev/docs/publish
+    extra-args: # optional, default is 
+    # Whether to enable caching of uv downloads, the Flutter SDK, and the Flet download cache to speed up repeated runs. Defaults to `true`. Disable this when troubleshooting caches or managing them separately, by setting it to `false`.
+    cache: # optional, default is true
+    # Whether to install (using `apt-get`) the system packages reported by Flet for a Linux desktop build. Defaults to `true`. Set it to `false` when using a pre-provisioned or non-Debian runner. Its value is ignored on non-Linux targets.
+    install-linux-dependencies: # optional, default is true
+    # Whether to create one platform-aware archive after the build. When `true` (the default), produces ZIP files for all targets except Linux, which produces tar.gz to preserve permissions and symlinks. When using `actions/upload-artifact`, keep `archive-output` enabled and set `upload-artifact`'s `archive` option to `false`. If `archive-output` is `false`, this action does not create an archive and `archive-path` is empty.
+    archive-output: # optional, default is true
