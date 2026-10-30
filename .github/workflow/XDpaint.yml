@@ -1,0 +1,48 @@
+name: Android APK Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # This auto-finds your build.gradle even if it is inside a subfolder
+    - name: Find Root Directory
+      id: find-root
+      run: |
+        GRADLE_PATH=$(find . -name "build.gradle" -o -name "build.gradle.kts" | head -n 1)
+        DIR_PATH=$(dirname "$GRADLE_PATH")
+        echo "project_dir=$DIR_PATH" >> $GITHUB_OUTPUT
+        echo "Found project root at: $DIR_PATH"
+
+    - name: set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: |
+        cd ${{ steps.find-root.outputs.project_dir }}
+        chmod +x gradlew || touch gradlew
+
+    - name: Build with Gradle
+      run: |
+        cd ${{ steps.find-root.outputs.project_dir }}
+        # Generates standard wrapper files if missing
+        if [ ! -f gradlew ]; then gradle wrapper; fi
+        ./gradlew assembleDebug
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug-apk
+        path: "**/build/outputs/apk/debug/*.apk"
